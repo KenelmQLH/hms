@@ -92,16 +92,18 @@ def transfer_num(data):
                 res.append(ss)
             return res
 
-        out_seq = seg_and_tag(equations)
+        out_seq = seg_and_tag(equations) # 中序表达式
         postfix = infix_to_postfix(out_seq)
         f_nums = eval_num_list(nums)
         n_d = dict()
         n_d['id'] = d['id']
         n_d['equation'] = d['equation']
+        n_d["original_text"] = d["original_text"]
+
         n_d['text'] = ' '.join(input_seq)
         n_d['target_norm_post_template'] = ' '.join(['x', '='] + postfix)
         n_d['num_list'] = f_nums
-        n_d["original_text"] = d["original_text"]
+
         n_data.append(n_d)
         if post_solver(number_map(postfix, f_nums)) is None:
             print(d['id'])
@@ -137,10 +139,13 @@ def equ_process(in_path, out_path):
         out_item["id"] = raw_item["id"]
         out_item["original_text"] = raw_item["original_text"]
         out_item["equation"] = raw_item["equation"]
+        
         out_item["text"] = raw_item["text"]
-        out_item["answer"] = answer
         out_item["num_list"] = num_list
+
+        out_item["answer"] = answer
         out_item["target_norm_pre_template"] = ' '.join(["x", "="] + pre)
+        
         out_item["spans"] = raw_item["spans"]
         out_item["dependency"] = raw_item["dependency"]
         dataset.append(out_item)
